@@ -34,15 +34,16 @@ namespace GradeClassifier
             {
                 string fileName = "";
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = ".csv|*.csv|*.xlsx|*.xlsm";
+                openFileDialog.Filter = "CSV (*.csv)|*.csv|XLSX (*.xlsx)|*.xlsx";
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
-                    fileName = dialog.FileName;
+                    fileName = openFileDialog.FileName;
+                    txtEditor.Text = "successfully load " + fileName;
+                    //DataTable data = new DataTable(fileName);
+                    //data = NewDataTable(fileName, ",", true);
+                    //grdDataImp.DataSource = data;
+
                 }
-                DataTable data = new DataTable(fileName);
-                data = NewDataTable(fileName, ",", true);
-                grdDataImp.DataSource = data;
             }
             catch (Exception)
             {
