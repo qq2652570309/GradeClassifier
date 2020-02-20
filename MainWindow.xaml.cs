@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,12 +30,23 @@ namespace GradeClassifier
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = "";
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = ".csv|*.csv|*.xlsx|*.xlsm";
-            if (openFileDialog.ShowDialog() == true)
+            try
             {
-                txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+                string fileName = "";
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = ".csv|*.csv|*.xlsx|*.xlsm";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+                    filename = dialog.FileName;
+                }
+                DataTable data = new DataTable();
+                data = NewDataTable(filename, ",", true);
+                grdDataImp.DataSource = data;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
