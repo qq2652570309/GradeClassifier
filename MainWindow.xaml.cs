@@ -29,6 +29,7 @@ namespace GradeClassifier
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
+            string test = "";
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = ".csv|*.csv|*.xlsx|*.xlsm";
             if (openFileDialog.ShowDialog() == true)
