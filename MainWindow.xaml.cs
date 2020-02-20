@@ -38,10 +38,10 @@ namespace GradeClassifier
                 if (openFileDialog.ShowDialog() == true)
                 {
                     txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
-                    filename = dialog.FileName;
+                    fileName = dialog.FileName;
                 }
-                DataTable data = new DataTable();
-                data = NewDataTable(filename, ",", true);
+                DataTable data = new DataTable(fileName);
+                data = NewDataTable(fileName, ",", true);
                 grdDataImp.DataSource = data;
             }
             catch (Exception)
