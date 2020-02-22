@@ -38,7 +38,7 @@ namespace GradeClassifier
             };
         }
 
-        private string getFileName()
+        private string GetFileName()
         {
             string fileName = "";
             try
@@ -90,7 +90,7 @@ namespace GradeClassifier
             //}
         }
 
-        private void readData(string fileName)
+        private void ReadData(string fileName)
         {
             try
             {
@@ -128,8 +128,8 @@ namespace GradeClassifier
             columns.Clear();
             studentInfo.Clear();
 
-            string fileName = getFileName();
-            readData(fileName);
+            string fileName = GetFileName();
+            ReadData(fileName);
 
             TextBox TextBoxItem = new TextBox();
             TextBoxItem.Text = fileName;
