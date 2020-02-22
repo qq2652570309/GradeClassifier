@@ -127,6 +127,8 @@ namespace GradeClassifier
                         }
                     }
                 }
+                // use default comparator implemented in Student class
+                studentInfo.Sort();
             }
             catch (Exception e)
             {

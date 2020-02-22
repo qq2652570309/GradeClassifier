@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GradeClassifier
 {
-    class Student
+    class Student : IEquatable<Student>, IComparable<Student>
     {
         private String lastName;
         private String firstName;
@@ -26,6 +26,19 @@ namespace GradeClassifier
             StringBuilder sb = new StringBuilder();
             sb.Append(lastName+","+firstName+","+userName+ ","+id+"\n");
             return sb.ToString();
+        }
+
+        public int CompareTo(Student other) {
+            if (other == null) {
+                return -1;
+            }
+            return other.GetID() - this.id;
+        }
+
+        public bool Equals(Student other)
+        {
+            if (other == null) return false;
+            return this.id == other.GetID() && this.userName.Equals(other.GetUserName());
         }
 
         public String GetLastName() {
