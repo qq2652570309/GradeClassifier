@@ -1,1 +1,0 @@
-devenv GradeClassifier.sln /rebuild debug
