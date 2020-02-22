@@ -39,15 +39,24 @@ namespace GradeClassifier
                 {
                     fileName = openFileDialog.FileName;
                     txtEditor.Text = "successfully load " + fileName;
+
                     //DataTable data = new DataTable(fileName);
                     //data = NewDataTable(fileName, ",", true);
                     //grdDataImp.DataSource = data;
 
+                    String str = File.ReadAllText(fileName);
+                    System.Diagnostics.Debug.WriteLine("\n\n");
+                    System.Diagnostics.Debug.WriteLine("-----------------------------------");
+                    //System.Diagnostics.Debug.WriteLine(str);
+                    Test t = new Test(1, "one");
+                    t.toString();
+
                 }
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                throw;
+                Console.WriteLine("Program not work");
+                Console.WriteLine(exc.Message);
             }
         }
     }
