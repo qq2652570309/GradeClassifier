@@ -125,6 +125,15 @@ namespace GradeClassifier
 
             string fileName = getFileName();
             readData(fileName);
+
+            TextBox TextBoxItem = new TextBox();
+            TextBoxItem.Text = fileName;
+            loadingFiles.Items.Add(TextBoxItem);
+        }
+
+        private void renameFile_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
