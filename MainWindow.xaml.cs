@@ -85,8 +85,9 @@ namespace GradeClassifier
                     }
                 }
             }
-            //foreach (int i in columns) {
-            //    Console.WriteLine(cols[i]);
+            //foreach (int i in columns)
+            //{
+            //    Console.WriteLine("{" + cols[i] + "}");
             //}
         }
 
