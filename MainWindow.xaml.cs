@@ -24,7 +24,7 @@ namespace GradeClassifier
     public partial class MainWindow : Window
     {
         List<int> columns;
-        List<string> studentInfo;
+        List<Student> studentInfo;
         List<string> targets;
 
         public MainWindow()
@@ -32,7 +32,7 @@ namespace GradeClassifier
             InitializeComponent();
 
             columns = new List<int>();
-            studentInfo = new List<string>();
+            studentInfo = new List<Student>();
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID", "Final Exam Grade"
             };
@@ -90,6 +90,20 @@ namespace GradeClassifier
             //}
         }
 
+        private void ParseData(String line) {
+            string[] cols;
+            if (line.IndexOf(',') != -1)
+            {
+                cols = line.Split(',');
+            }
+            else
+            {
+                cols = line.Split('\t');
+            }
+            Student st = new Student(cols[0], cols[1], cols[2], int.Parse(cols[3]));
+            studentInfo.Add(st);
+        }
+
         private void ReadData(string fileName)
         {
             try
@@ -109,7 +123,7 @@ namespace GradeClassifier
                         }
                         else
                         {
-                            studentInfo.Add(line);
+                            ParseData(line);
                         }
                     }
                 }
@@ -122,6 +136,15 @@ namespace GradeClassifier
             }
         }
 
+        private void GenerateCSV(String oldFile) {
+            int pos = oldFile.LastIndexOf("\\");
+            String newFile = oldFile.Substring(0, pos + 1) + "out.csv";
+            File.AppendAllText(newFile, "Last Name,First Name,UserName,Student ID\n");
+            foreach (Student st in studentInfo) {
+                File.AppendAllText(newFile, st.CsvFormat());
+            }
+        }
+
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -130,6 +153,7 @@ namespace GradeClassifier
 
             string fileName = GetFileName();
             ReadData(fileName);
+            GenerateCSV(fileName);
 
             TextBox TextBoxItem = new TextBox();
             TextBoxItem.Text = fileName;
