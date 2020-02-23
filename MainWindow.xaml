@@ -5,19 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeClassifier"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Grade Classifier" Height="600" Width="640">
    
-    <DockPanel Margin="10">
-        <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
-            <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
-        </WrapPanel>
-        <Grid Margin="2">
-            <ListBox Name="loadingFiles">
-                <ListBoxItem>ListBox Item #1</ListBoxItem>
-                <ListBoxItem>ListBox Item #2</ListBoxItem>
-                <ListBoxItem>ListBox Item #3</ListBoxItem>
-                <TextBox Name="txtEditor">1</TextBox>
-            </ListBox>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 10 0 5">
+            <Label FontFamily="tahoma" FontWeight="Bold" FontSize="16" >Path:</Label>
+            <Label Width="10"></Label>
+            <Border BorderThickness="1" BorderBrush="Black" Margin="2">
+                <TextBlock x:Name="CurrPath" x:FieldModifier="public" 
+                           VerticalAlignment="Center" FontWeight="Medium" 
+                           FontSize="12" Width="470"></TextBlock>
+            </Border>
+            <Button Name="btnOpenFile" Click = "btnOpenFile_Click" Content="Browse" 
+                    Margin="20 5 0 5" FontFamily="tahoma" FontWeight="Bold" FontSize="16" 
+                    />
+        </StackPanel>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"></RowDefinition>
+                <!--row0-->
+                <RowDefinition Height="40"></RowDefinition>
+                <!--row1-->
+                <RowDefinition Height="5"></RowDefinition>
+                <!--row2-->
+                <RowDefinition Height="*"></RowDefinition>
+                <!--row3-->
+                <RowDefinition Height="5"></RowDefinition>
+                <!--row4-->
+                <RowDefinition Height="40"></RowDefinition>
+                <!--row5-->
+            </Grid.RowDefinitions>
+            <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" Background="#999" />
+            <StackPanel Grid.Row="1" Orientation="Horizontal" DockPanel.Dock="Top">
+                <Label Padding="20 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">A:</Label>
+                <TextBox Name="Amax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="100"  />
+                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
+                <TextBox Name="Amin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="90"  />
+                
+                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">B:</Label>
+                <TextBox Name="Bmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="89"  />
+                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
+                <TextBox Name="Bmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="80"  />
+
+                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">C:</Label>
+                <TextBox Name="Cmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="79"  />
+                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
+                <TextBox Name="Cmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="70"  />
+
+                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">D:</Label>
+                <TextBox Name="Dmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="69"  />
+                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
+                <TextBox Name="Dmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="60"  />
+            </StackPanel>
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Background="#999" />
+            <ListBox Grid.Row="3" x:Name="Files" x:FieldModifier="public" Margin="10 5" FontWeight="Medium" FontSize="12" />
+            <GridSplitter Grid.Row="4" HorizontalAlignment="Stretch" Background="#999" />
+            <Button Name="btnPublish" Click = "PublishClick" Grid.Row="5" Content="Publish" Margin="10 5 10 5" />
         </Grid>
     </DockPanel>
 </Window>
