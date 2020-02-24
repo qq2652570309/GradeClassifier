@@ -242,7 +242,6 @@ namespace GradeClassifier
                 MessageBox.Show("There are gaps among grade scales");
                 return false;
             }
-
             return true;
         }
 
@@ -265,11 +264,28 @@ namespace GradeClassifier
 
         }
 
+        private void ExpandClick(object sender, RoutedEventArgs e) {
+            Console.WriteLine("PublishClick");
+        }
+
         private void PublishClick(object sender, RoutedEventArgs e) {
             // check grading scales are valid
-            if (checkGradingScale()) {
+            if (!checkGradingScale()) {
                 return;
             }
+            
+            gradingColmums.Items.Clear();
+            for (int i = 0; i < 20; i++) {
+                if (i % 4 == 0)
+                {
+                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Visible" });
+                }
+                else {
+                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Collapsed" });
+                }
+                
+            }
+            Console.WriteLine("PublishClick");
         }
 
 
@@ -279,5 +295,13 @@ namespace GradeClassifier
         private void test() { 
         
         }
+    }
+
+    public class GradeItem
+    {
+        public string title { get; set; }
+        public string weight { get; set; }
+
+        public string isVisible { get; set; }
     }
 }

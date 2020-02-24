@@ -59,7 +59,33 @@
                 <TextBox Name="Dmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="60" />
             </StackPanel>
             <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Background="#999" />
-            <ListBox Grid.Row="3" x:Name="Files" x:FieldModifier="public" Margin="10 5" FontWeight="Medium" FontSize="12" />
+            <ListBox Grid.Row="3" x:Name="gradingColmums" x:FieldModifier="public" Margin="10 5" FontWeight="Medium" FontSize="12" 
+                     HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <!--row0-->
+                                <ColumnDefinition Width="40" />
+                                <!--row1-->
+                                <ColumnDefinition Width="20" />
+                                <!--row2-->
+                                <ColumnDefinition Width="20" />
+                                <!--row3-->
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding title}" />
+                            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" Margin="2">
+                                <TextBox VerticalAlignment="Center" TextAlignment="Right" Text="{Binding weight}" />
+                            </Border>
+                            <TextBlock Grid.Column="2" Padding="0,2" Text="%" />
+                            <Button Grid.Column="3" Click = "ExpandClick" Background="Transparent" Visibility="{Binding isVisible}">
+                                <Image Source="images/drop-down-arrow.png" Height="20"></Image>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <GridSplitter Grid.Row="4" HorizontalAlignment="Stretch" Background="#999" />
             <Button Name="btnPublish" Click = "PublishClick" Grid.Row="5" Content="Publish" Margin="10 5 10 5" />
         </Grid>
