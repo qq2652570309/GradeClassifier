@@ -34,7 +34,7 @@ namespace GradeClassifier
             columns = new List<int>();
             studentInfo = new List<Student>();
             targets = new List<string>() {
-                "Last Name", "First Name", "Username", "Student ID", "Final Exam Grade"
+                "Last Name", "First Name", "Username", "Student ID"
             };
         }
 
@@ -63,6 +63,8 @@ namespace GradeClassifier
             return fileName;
         }
 
+        // get basic column indices of basic student informantion
+        // including: last name, first name, username, id
         private void targetColumns(string line)
         {
             string[] cols;
@@ -85,10 +87,6 @@ namespace GradeClassifier
                     }
                 }
             }
-            //foreach (int i in columns)
-            //{
-            //    Console.WriteLine("{" + cols[i] + "}");
-            //}
         }
 
         private void ParseData(String line) {
