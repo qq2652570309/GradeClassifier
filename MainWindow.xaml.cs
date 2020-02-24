@@ -265,7 +265,7 @@ namespace GradeClassifier
         }
 
         private void ExpandClick(object sender, RoutedEventArgs e) {
-
+            Console.WriteLine("PublishClick");
         }
 
         private void PublishClick(object sender, RoutedEventArgs e) {
@@ -273,7 +273,7 @@ namespace GradeClassifier
             if (!checkGradingScale()) {
                 return;
             }
-
+            
             gradingColmums.Items.Clear();
             for (int i = 0; i < 20; i++) {
                 if (i % 4 == 0)
@@ -285,7 +285,7 @@ namespace GradeClassifier
                 }
                 
             }
-
+            Console.WriteLine("PublishClick");
         }
 
     }
