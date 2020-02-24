@@ -148,6 +148,105 @@ namespace GradeClassifier
             }
         }
 
+        /*
+        check whether input grading value is valid. If input is null or can not be
+        converted to integer, it is invalid 
+        */
+        private bool isValidGrade(string str, ref int num, String grade) {
+            bool isNullEmpty = string.IsNullOrEmpty(str);
+            if (isNullEmpty)
+            {
+                MessageBox.Show("Grading " + grade + " can't be blank");
+                return false;
+            }
+            bool isNum = Int32.TryParse(str, out num);
+            if (!isNum)
+            {
+                MessageBox.Show("Grading "+ grade + " must be Numeric");
+                return false;
+            }
+            return true;
+        }
+
+        /*
+        check whether input scales are valid. If there exit an overlapping, scale is invalid 
+        */
+        private bool isValidScale(int ceiling, int floor, int preFloor, string grade) {
+            if (ceiling <= 0 || floor <= 0 || preFloor <= 0) {
+                MessageBox.Show("Scale must be positive and non-zero");
+                return false;
+            }
+            if (preFloor <= ceiling || ceiling <= floor) {
+                MessageBox.Show("There is overlapping with scale " + grade);
+                return false;
+            }
+            return true;
+        }
+
+        // check grade scale is valid without overlapping. verfiy continuity
+        private bool checkGradingScale() {
+            string AMinValue = Amin.Text;
+            int AMinNum = 0;
+
+            string BMaxValue = Bmax.Text;
+            string BMinValue = Bmin.Text;
+            int BMaxNum = 0;
+            int BMinNum = 0;
+
+            string CMaxValue = Cmax.Text;
+            string CMinValue = Cmin.Text;
+            int CMaxNum = 0;
+            int CMinNum = 0;
+
+            string DMaxValue = Dmax.Text;
+            string DMinValue = Dmin.Text;
+            int DMaxNum = 0;
+            int DMinNum = 0;
+            // verify Grade Scale A
+            if (!isValidGrade(AMinValue, ref AMinNum, "A")) {
+                return false;
+            }
+            if (AMinNum >= 100) {
+                MessageBox.Show("Grading A must less than 100");
+                return false;
+            }
+            // verify Grade Scale B
+            if (!isValidGrade(BMaxValue, ref BMaxNum, "B") 
+                || !isValidGrade(BMinValue, ref BMinNum, "B"))
+            {
+                return false;
+            }
+            if (!isValidScale(BMaxNum, BMinNum, AMinNum, "B")) {
+                return false;
+            }
+            // verify Grade Scale C
+            if (!isValidGrade(CMaxValue, ref CMaxNum, "C")
+                || !isValidGrade(CMinValue, ref CMinNum, "C"))
+            {
+                return false;
+            }
+            if (!isValidScale(CMaxNum, CMinNum, BMinNum, "C"))
+            {
+                return false;
+            }
+            // verify Grade Scale D
+            if (!isValidGrade(DMaxValue, ref DMaxNum, "D")
+                || !isValidGrade(DMinValue, ref DMinNum, "D"))
+            {
+                return false;
+            }
+            if (!isValidScale(DMaxNum, DMinNum, CMinNum, "D"))
+            {
+                return false;
+            }
+            // verify continuity
+            if (AMinNum != BMaxNum+1 || BMinNum != CMaxNum+1 || CMinNum != DMaxNum+1) {
+                MessageBox.Show("There are gaps among grade scales");
+                return false;
+            }
+
+            return true;
+        }
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -160,12 +259,20 @@ namespace GradeClassifier
 
             TextBox TextBoxItem = new TextBox();
             TextBoxItem.Text = fileName;
-            loadingFiles.Items.Add(TextBoxItem);
+            //loadingFiles.Items.Add(TextBoxItem);
         }
 
         private void renameFile_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        private void PublishClick(object sender, RoutedEventArgs e) {
+            // check grading scales are valid
+            if (checkGradingScale()) {
+                return;
+            }
+        }
+
     }
 }
