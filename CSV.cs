@@ -14,7 +14,9 @@ namespace GradeClassifier
         Dictionary<int, Property> propertyMap; // key is column index, value is property object
         CompareInfo Compare; // ignore upper or lower case
 
-        public CSV() { }
+        public CSV() {
+            propertyMap = new Dictionary<int, Property>();
+        }
 
         public CSV(string fileName) {
             this.fileName = fileName;
@@ -23,6 +25,7 @@ namespace GradeClassifier
 
         private void ReadData(string fileName) {
             try {
+                this.fileName = fileName;
                 // Create an instance of StreamReader to read from a file.
                 // The using statement also closes the StreamReader.
                 using (StreamReader sr = new StreamReader(fileName)) {
@@ -162,8 +165,10 @@ namespace GradeClassifier
             return point;
         }
 
-        private void selfTest() { 
-            
+        private void print() {
+            foreach (KeyValuePair<int, Property> item in propertyMap) {
+                Console.WriteLine(item.Value.toString());
+            }
         }
     }
 }

@@ -31,7 +31,10 @@ namespace GradeClassifier
         }
 
 
-
+        public string toString() { 
+            string str = index + ": " + type + "[" + "Total Pts:"+ ptsMax + " "+ ptsType + "]";
+            return str;
+        }
     }
 }
 
