@@ -63,7 +63,7 @@
                      HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,5,0,5">
+                        <Grid Margin="0,5,0,5" Visibility="{Binding isVisible}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <!--row0-->
@@ -79,7 +79,7 @@
                                 <TextBox VerticalAlignment="Center" TextAlignment="Right" Text="{Binding weight}" />
                             </Border>
                             <TextBlock Grid.Column="2" Padding="0,2" Text="%" />
-                            <Button Grid.Column="3" Click = "ExpandClick" Background="Transparent" Visibility="{Binding isVisible}">
+                            <Button Grid.Column="3" Click = "ExpandClick" Background="Transparent" Visibility="{Binding bnVisible}">
                                 <Image Source="images/drop-down-arrow.png" Height="20"></Image>
                             </Button>
                         </Grid>

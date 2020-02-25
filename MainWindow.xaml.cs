@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,21 +16,18 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GradeClassifier
-{
+namespace GradeClassifier {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
         List<int> columns;
         List<Student> studentInfo;
         List<string> targets;
-        Parser paser;
 
+        Dictionary<GradeItem, List<GradeItem>> gradeDict;
 
-        public MainWindow()
-        {
+        public MainWindow() {
             InitializeComponent();
 
             columns = new List<int>();
@@ -38,18 +35,51 @@ namespace GradeClassifier
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID"
             };
-            paser = new Parser();
+
+
+            gradeDict = new Dictionary<GradeItem, List<GradeItem>>();
+
+            List<GradeItem> hwList = new List<GradeItem>();
+            GradeItem hw1 = new GradeItem();
+            hw1.type = "homework";
+            hw1.level = 1;
+            hw1.title = hw1.type;
+            hw1.weight = "0";
+
+            for (int i = 0; i < 3; i++) {
+                GradeItem tmp = new GradeItem();
+                tmp.type = "homework";
+                tmp.level = 2;
+                tmp.title = tmp.type + i;
+                tmp.weight = "0";
+                hwList.Add(tmp);
+            }
+            gradeDict.Add(hw1, hwList);
+
+            List<GradeItem> quizList = new List<GradeItem>();
+            GradeItem quiz1 = new GradeItem();
+            quiz1.type = "quiz";
+            quiz1.level = 1;
+            quiz1.title = quiz1.type;
+            quiz1.weight = "0";
+
+            for (int i = 0; i < 3; i++) {
+                GradeItem tmp = new GradeItem();
+                tmp.type = "quiz";
+                tmp.level = 2;
+                tmp.title = tmp.type + i;
+                tmp.weight = "0";
+                quizList.Add(tmp);
+            }
+            gradeDict.Add(quiz1, quizList);
         }
 
-        private string GetFileName()
-        {
+        private string GetFileName() {
             string fileName = "";
-            try
-            {
+            try {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "CSV (*.csv)|*.csv|XLSX (*.xlsx)|*.xlsx|XLS (*.xls)|*.xls";
-                if (openFileDialog.ShowDialog() == true)
-                {
+                if (openFileDialog.ShowDialog() == true) {
                     fileName = openFileDialog.FileName;
                     //txtEditor.Text = "successfully load " + fileName;
                     //DataTable data = new DataTable(fileName);
@@ -59,8 +89,7 @@ namespace GradeClassifier
                     Console.WriteLine(fileName);
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 throw;
             }
             return fileName;
@@ -68,24 +97,18 @@ namespace GradeClassifier
 
         // get basic column indices of basic student informantion
         // including: last name, first name, username, id
-        private void targetColumns(string line)
-        {
+        private void targetColumns(string line) {
             string[] cols;
-            if (line.IndexOf(',') != -1)
-            {
+            if (line.IndexOf(',') != -1) {
                 cols = line.Split(',');
             }
-            else
-            {
+            else {
                 cols = line.Split('\t');
             }
-            for (int i = 0; i < cols.Length; i++)
-            {
+            for (int i = 0; i < cols.Length; i++) {
                 string col = cols[i];
-                foreach (string target in targets)
-                {
-                    if (col != null && col.IndexOf(target) != -1)
-                    {
+                foreach (string target in targets) {
+                    if (col != null && col.IndexOf(target) != -1) {
                         columns.Add(i);
                     }
                 }
@@ -94,22 +117,41 @@ namespace GradeClassifier
 
         private void ParseData(String line) {
             string[] cols;
-            if (line.IndexOf(',') != -1)
-            {
+            if (line.IndexOf(',') != -1) {
                 cols = line.Split(',');
             }
-            else
-            {
+            else {
                 cols = line.Split('\t');
             }
             Student st = new Student(cols[0], cols[1], cols[2], int.Parse(cols[3]));
             studentInfo.Add(st);
         }
 
-        private void ReadData(string fileName)
-        {
-            paser.ReadData(fileName);
-            paser.print();
+        private void ReadData(string fileName) {
+            try {
+                // Create an instance of StreamReader to read from a file.
+                // The using statement also closes the StreamReader.
+                using (StreamReader sr = new StreamReader(fileName)) {
+                    string line;
+                    // Read and display lines from the file until the end of 
+                    // the file is reached.
+                    for (int i = 0; (line = sr.ReadLine()) != null; i++) {
+                        if (i == 0) {
+                            targetColumns(line);
+                        }
+                        else {
+                            ParseData(line);
+                        }
+                    }
+                }
+                // use default comparator implemented in Student class
+                studentInfo.Sort();
+            }
+            catch (Exception e) {
+                // Let the user know what went wrong.
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
         }
 
         private void GenerateCSV(String oldFile) {
@@ -127,15 +169,13 @@ namespace GradeClassifier
         */
         private bool isValidGrade(string str, ref int num, String grade) {
             bool isNullEmpty = string.IsNullOrEmpty(str);
-            if (isNullEmpty)
-            {
+            if (isNullEmpty) {
                 MessageBox.Show("Grading " + grade + " can't be blank");
                 return false;
             }
             bool isNum = Int32.TryParse(str, out num);
-            if (!isNum)
-            {
-                MessageBox.Show("Grading "+ grade + " must be Numeric");
+            if (!isNum) {
+                MessageBox.Show("Grading " + grade + " must be Numeric");
                 return false;
             }
             return true;
@@ -184,9 +224,8 @@ namespace GradeClassifier
                 return false;
             }
             // verify Grade Scale B
-            if (!isValidGrade(BMaxValue, ref BMaxNum, "B") 
-                || !isValidGrade(BMinValue, ref BMinNum, "B"))
-            {
+            if (!isValidGrade(BMaxValue, ref BMaxNum, "B")
+                || !isValidGrade(BMinValue, ref BMinNum, "B")) {
                 return false;
             }
             if (!isValidScale(BMaxNum, BMinNum, AMinNum, "B")) {
@@ -194,34 +233,29 @@ namespace GradeClassifier
             }
             // verify Grade Scale C
             if (!isValidGrade(CMaxValue, ref CMaxNum, "C")
-                || !isValidGrade(CMinValue, ref CMinNum, "C"))
-            {
+                || !isValidGrade(CMinValue, ref CMinNum, "C")) {
                 return false;
             }
-            if (!isValidScale(CMaxNum, CMinNum, BMinNum, "C"))
-            {
+            if (!isValidScale(CMaxNum, CMinNum, BMinNum, "C")) {
                 return false;
             }
             // verify Grade Scale D
             if (!isValidGrade(DMaxValue, ref DMaxNum, "D")
-                || !isValidGrade(DMinValue, ref DMinNum, "D"))
-            {
+                || !isValidGrade(DMinValue, ref DMinNum, "D")) {
                 return false;
             }
-            if (!isValidScale(DMaxNum, DMinNum, CMinNum, "D"))
-            {
+            if (!isValidScale(DMaxNum, DMinNum, CMinNum, "D")) {
                 return false;
             }
             // verify continuity
-            if (AMinNum != BMaxNum+1 || BMinNum != CMaxNum+1 || CMinNum != DMaxNum+1) {
+            if (AMinNum != BMaxNum + 1 || BMinNum != CMaxNum + 1 || CMinNum != DMaxNum + 1) {
                 MessageBox.Show("There are gaps among grade scales");
                 return false;
             }
             return true;
         }
 
-        private void btnOpenFile_Click(object sender, RoutedEventArgs e)
-        {
+        private void btnOpenFile_Click(object sender, RoutedEventArgs e) {
             columns.Clear();
             studentInfo.Clear();
 
@@ -234,41 +268,70 @@ namespace GradeClassifier
             //loadingFiles.Items.Add(TextBoxItem);
         }
 
-        private void renameFile_Click(object sender, RoutedEventArgs e)
-        {
+        private void renameFile_Click(object sender, RoutedEventArgs e) {
 
         }
 
         private void ExpandClick(object sender, RoutedEventArgs e) {
-            
+            Button bn = sender as Button;
+            int index = gradingColmums.Items.IndexOf(bn.DataContext);
+            GradeItem keyItem = (GradeItem)gradingColmums.Items.GetItemAt(index);
+
+            List<GradeItem> list = gradeDict[keyItem];
+            foreach (GradeItem gi in list) {
+                if (gi.isVisible == "Visible") {
+                    gi.isVisible = "Collapsed";
+                }
+                else {
+                    gi.isVisible = "Visible";
+                }
+            }
+            gradingColmums.Items.Refresh();
         }
+
 
         private void PublishClick(object sender, RoutedEventArgs e) {
             // check grading scales are valid
             if (!checkGradingScale()) {
                 return;
             }
-            
             gradingColmums.Items.Clear();
-            for (int i = 0; i < 20; i++) {
-                if (i % 4 == 0)
-                {
-                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Visible" });
+
+            //Dictionary<GradeItem, List<GradeItem>> gradeDict;
+
+            foreach (KeyValuePair<GradeItem, List<GradeItem>> entry in gradeDict) {
+                GradeItem keyItem = entry.Key;
+                List<GradeItem> listItems = entry.Value;
+
+                keyItem.isVisible = "Visible";
+                keyItem.bnVisible = "Visible";
+                gradingColmums.Items.Add(keyItem);
+
+                foreach (GradeItem gi in listItems) {
+                    gi.isVisible = "Collapsed";
+                    gi.bnVisible = "Hidden";
+                    gradingColmums.Items.Add(gi);
                 }
-                else {
-                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Collapsed" });
-                }
-                
+
             }
         }
 
+
+
+
+
+        private void test() {
+
+        }
     }
 
-    public class GradeItem
-    {
+    public class GradeItem {
+        public string type { get; set; }
+        public int level { get; set; }
+        public string bnVisible { get; set; }
+
         public string title { get; set; }
         public string weight { get; set; }
-
         public string isVisible { get; set; }
     }
 }
