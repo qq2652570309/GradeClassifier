@@ -74,7 +74,7 @@
                                 <ColumnDefinition Width="20" />
                                 <!--row3-->
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding colType}"  />
+                            <TextBlock Grid.Column="0" Text="{Binding colName}"  />
                             <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" Margin="2">
                                 <TextBox VerticalAlignment="Center" TextAlignment="Right" Text="{Binding weight}" />
                             </Border>

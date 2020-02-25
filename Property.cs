@@ -8,24 +8,21 @@ namespace GradeClassifier
 {
     public class Property {
         int column; // which column
-        //public string colType; // Weight, Total, Attendance, Lab, Assignment, Quiz, Exam
         string ptsType; // Score, Complete/Incomplete, Letter, or?
         int ptsMax;
-        //public int weight;
-        int index;
-
         
 
         public string bnVisible { get; set; }
         public string isVisible { get; set; }
         public int weight { get; set; }
 
-        public string colType { get; set; }
+        public string colType { get; set; } // Weight, Total, Attendance, Lab, Assignment, Quiz, Exam
+
+        public string colName { get; set; } // original name in file
 
         public Property() {
             column = -1;
-            index = 0;
-            //type = "";
+            colName = "";
             ptsType = "";
             ptsMax = 0;
             weight = 1;
@@ -33,8 +30,7 @@ namespace GradeClassifier
 
         public Property(int column) {
             this.column = column;
-            index = 0;
-            //type = "";
+            colName = "";
             ptsType = "";
             ptsMax = 0;
             weight = 1;
@@ -56,8 +52,8 @@ namespace GradeClassifier
             this.ptsMax = ptsMax;
         }
 
-        public void setIndex(int index) {
-            this.index = index;
+        public void setName(string name) {
+            this.colName = name;
         }
 
         //public void setWeight(int weight) {
@@ -65,11 +61,8 @@ namespace GradeClassifier
         //}
 
         public string toString() {
-            string str;
-            if (index <= 0)
-                str = column + ": " + colType + "[" + "Total Pts: " + ptsMax + " " + ptsType + "], weight:" + weight;
-            else
-                str = column + ": " + colType + index + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "], weight:" + weight;
+            string str = 
+                column + " " + colType + ": " + colName + " [" + "Total Pts: "+ ptsMax + " "+ ptsType + "], weight:" + weight;
             return str;
         }
     }

@@ -89,15 +89,14 @@ namespace GradeClassifier
         private void parseHeader(string[] headers) {
             for (int i = 4; i < headers.Length; i++) {
                 string header = headers[i];
-                int index = -1;
-                string type = headerType(header, ref index);
+                string type = headerType(header);
                 if (!type.Equals("None")) {
                     Property p = new Property(i);
                     string ptsType = pointsType(header);
                     int ptsMax = pointsMax(header);
 
                     p.setColType(type);
-                    p.setIndex(index);
+                    p.setName(getName(header));
                     p.setPtsType(ptsType);
                     p.setPtsMax(ptsMax);
 
@@ -108,7 +107,7 @@ namespace GradeClassifier
 
         // find out which type header is
         // return Weight, Total, Attendance, Lab, Assignment, Quiz, Exam, or None
-        private String headerType(string header, ref int index) {
+        private String headerType(string header) {
             int bracket = header.IndexOf('[');
             if (bracket == -1)
                 return "None";
@@ -144,12 +143,11 @@ namespace GradeClassifier
                 colType = "None";
             }
 
-            if (!colType.Equals("None") && bracket > pos) {
-                string num = Regex.Match(header.Substring(pos, bracket - pos), @"\d+").Value;
-                if (num != null && num.Length > 0)
-                    index = Int32.Parse(num);
-            }
             return colType;
+        }
+
+        private String getName(string header) {
+            return header.Substring(0, header.IndexOf('['));
         }
 
         // find out which type point is

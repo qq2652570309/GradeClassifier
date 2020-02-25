@@ -278,8 +278,8 @@ namespace GradeClassifier {
                 }
                 else {
                     Property head = new Property();
-                    
                     head.colType = p.colType;
+                    head.colName = head.colType;
                     //head.setType(p.getColType());
                     List<Property> list = new List<Property>();
                     list.Add(p);
