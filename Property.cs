@@ -7,23 +7,29 @@ using System.Threading.Tasks;
 namespace GradeClassifier
 {
     class Property {
-        int index; // which column
+        int column; // which column
         string type; // Weight, Total, Attendance, Lab, Assignment, Quiz, Exam
         string ptsType; // Score, Complete/Incomplete, Letter, or?
         int ptsMax;
+        int weight;
+        int index;
 
         public Property() {
-            index = -1;
+            column = -1;
+            index = 0;
             type = "";
             ptsType = "";
             ptsMax = 0;
+            weight = 1;
         }
 
-        public Property(int index) {
-            this.index = index;
+        public Property(int column) {
+            this.column = column;
+            index = 0;
             type = "";
             ptsType = "";
             ptsMax = 0;
+            weight = 1;
         }
 
         public void setType(String type) {
@@ -38,9 +44,20 @@ namespace GradeClassifier
             this.ptsMax = ptsMax;
         }
 
+        public void setIndex(int index) {
+            this.index = index;
+        }
 
-        public string toString() { 
-            string str = index + ": " + type + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "]";
+        public void setWeight(int weight) {
+            this.weight =  weight;
+        }
+
+        public string toString() {
+            string str;
+            if (index <= 0)
+                str = column + ": " + type + "[" + "Total Pts: " + ptsMax + " " + ptsType + "], weight:" + weight;
+            else
+                str = column + ": " + type + index + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "], weight:" + weight;
             return str;
         }
     }

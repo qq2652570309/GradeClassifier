@@ -24,6 +24,7 @@ namespace GradeClassifier {
         List<int> columns;
         List<Student> studentInfo;
         List<string> targets;
+        Parser parser;
 
         Dictionary<GradeItem, List<GradeItem>> gradeDict;
 
@@ -35,6 +36,8 @@ namespace GradeClassifier {
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID"
             };
+
+            parser = new Parser();
 
 
             gradeDict = new Dictionary<GradeItem, List<GradeItem>>();
@@ -255,17 +258,11 @@ namespace GradeClassifier {
             return true;
         }
 
+        // Browse button event
         private void btnOpenFile_Click(object sender, RoutedEventArgs e) {
-            columns.Clear();
-            studentInfo.Clear();
-
             string fileName = GetFileName();
-            ReadData(fileName);
-            GenerateCSV(fileName);
-
-            TextBox TextBoxItem = new TextBox();
-            TextBoxItem.Text = fileName;
-            //loadingFiles.Items.Add(TextBoxItem);
+            parser.ReadData(fileName);
+            parser.print();
         }
 
         private void renameFile_Click(object sender, RoutedEventArgs e) {
@@ -314,6 +311,7 @@ namespace GradeClassifier {
                 }
 
             }
+
         }
 
 
