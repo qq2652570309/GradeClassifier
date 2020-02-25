@@ -12,10 +12,18 @@ namespace GradeClassifier
         string ptsType; // Score, Complete/Incomplete, Letter, or?
         int ptsMax;
 
-        public Property() {}
+        public Property() {
+            index = -1;
+            type = "";
+            ptsType = "";
+            ptsMax = 0;
+        }
 
         public Property(int index) {
             this.index = index;
+            type = "";
+            ptsType = "";
+            ptsMax = 0;
         }
 
         public void setType(String type) {
@@ -32,7 +40,7 @@ namespace GradeClassifier
 
 
         public string toString() { 
-            string str = index + ": " + type + "[" + "Total Pts:"+ ptsMax + " "+ ptsType + "]";
+            string str = index + ": " + type + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "]";
             return str;
         }
     }

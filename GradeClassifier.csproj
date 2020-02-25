@@ -58,7 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CSV.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="Test.cs" />

@@ -26,6 +26,8 @@ namespace GradeClassifier
         List<int> columns;
         List<Student> studentInfo;
         List<string> targets;
+        Parser paser;
+
 
         public MainWindow()
         {
@@ -36,6 +38,7 @@ namespace GradeClassifier
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID"
             };
+            paser = new Parser();
         }
 
         private string GetFileName()
@@ -105,36 +108,8 @@ namespace GradeClassifier
 
         private void ReadData(string fileName)
         {
-            try
-            {
-                // Create an instance of StreamReader to read from a file.
-                // The using statement also closes the StreamReader.
-                using (StreamReader sr = new StreamReader(fileName))
-                {
-                    string line;
-                    // Read and display lines from the file until the end of 
-                    // the file is reached.
-                    for (int i = 0; (line = sr.ReadLine()) != null; i++)
-                    {
-                        if (i == 0)
-                        {
-                            targetColumns(line);
-                        }
-                        else
-                        {
-                            ParseData(line);
-                        }
-                    }
-                }
-                // use default comparator implemented in Student class
-                studentInfo.Sort();
-            }
-            catch (Exception e)
-            {
-                // Let the user know what went wrong.
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-            }
+            paser.ReadData(fileName);
+            paser.print();
         }
 
         private void GenerateCSV(String oldFile) {
@@ -265,7 +240,7 @@ namespace GradeClassifier
         }
 
         private void ExpandClick(object sender, RoutedEventArgs e) {
-            Console.WriteLine("PublishClick");
+            
         }
 
         private void PublishClick(object sender, RoutedEventArgs e) {
@@ -285,16 +260,8 @@ namespace GradeClassifier
                 }
                 
             }
-            Console.WriteLine("PublishClick");
         }
 
-
-
-
-
-        private void test() { 
-        
-        }
     }
 
     public class GradeItem
