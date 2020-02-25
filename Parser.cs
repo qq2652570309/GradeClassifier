@@ -12,7 +12,7 @@ namespace GradeClassifier
     class Parser
     {
         String fileName;
-        Dictionary<int, Property> propertyMap; // key is column index, value is property object
+        public Dictionary<int, Property> propertyMap; // key is column index, value is property object
         CompareInfo Compare; // ignore upper or lower case
 
         public Parser() {
@@ -96,7 +96,7 @@ namespace GradeClassifier
                     string ptsType = pointsType(header);
                     int ptsMax = pointsMax(header);
 
-                    p.setType(type);
+                    p.setColType(type);
                     p.setIndex(index);
                     p.setPtsType(ptsType);
                     p.setPtsMax(ptsMax);

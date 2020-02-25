@@ -6,18 +6,26 @@ using System.Threading.Tasks;
 
 namespace GradeClassifier
 {
-    class Property {
+    public class Property {
         int column; // which column
-        string type; // Weight, Total, Attendance, Lab, Assignment, Quiz, Exam
+        //public string colType; // Weight, Total, Attendance, Lab, Assignment, Quiz, Exam
         string ptsType; // Score, Complete/Incomplete, Letter, or?
         int ptsMax;
-        int weight;
+        //public int weight;
         int index;
+
+        
+
+        public string bnVisible { get; set; }
+        public string isVisible { get; set; }
+        public int weight { get; set; }
+
+        public string colType { get; set; }
 
         public Property() {
             column = -1;
             index = 0;
-            type = "";
+            //type = "";
             ptsType = "";
             ptsMax = 0;
             weight = 1;
@@ -26,14 +34,18 @@ namespace GradeClassifier
         public Property(int column) {
             this.column = column;
             index = 0;
-            type = "";
+            //type = "";
             ptsType = "";
             ptsMax = 0;
             weight = 1;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setColType(String colType) {
+            this.colType = colType;
+        }
+
+        public String getColType() {
+            return colType;
         }
 
         public void setPtsType(string ptsType) {
@@ -48,16 +60,16 @@ namespace GradeClassifier
             this.index = index;
         }
 
-        public void setWeight(int weight) {
-            this.weight =  weight;
-        }
+        //public void setWeight(int weight) {
+        //    this.weight =  weight;
+        //}
 
         public string toString() {
             string str;
             if (index <= 0)
-                str = column + ": " + type + "[" + "Total Pts: " + ptsMax + " " + ptsType + "], weight:" + weight;
+                str = column + ": " + colType + "[" + "Total Pts: " + ptsMax + " " + ptsType + "], weight:" + weight;
             else
-                str = column + ": " + type + index + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "], weight:" + weight;
+                str = column + ": " + colType + index + "[" + "Total Pts: "+ ptsMax + " "+ ptsType + "], weight:" + weight;
             return str;
         }
     }
