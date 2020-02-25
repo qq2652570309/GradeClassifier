@@ -27,6 +27,8 @@ namespace GradeClassifier
         List<Student> studentInfo;
         List<string> targets;
 
+        Dictionary<GradeItem, List<GradeItem>> gradeDict;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,6 +38,43 @@ namespace GradeClassifier
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID"
             };
+
+
+            gradeDict = new Dictionary<GradeItem, List<GradeItem>>();
+
+            List<GradeItem> hwList = new List<GradeItem>();
+            GradeItem hw1 = new GradeItem();
+            hw1.type = "homework";
+            hw1.level = 1;
+            hw1.title = hw1.type;
+            hw1.weight = "0";
+
+            for (int i = 0; i < 3; i++) {
+                GradeItem tmp = new GradeItem();
+                tmp.type = "homework";
+                tmp.level = 2;
+                tmp.title = tmp.type + i;
+                tmp.weight = "0";
+                hwList.Add(tmp);
+            }
+            gradeDict.Add(hw1, hwList);
+
+            List<GradeItem> quizList = new List<GradeItem>();
+            GradeItem quiz1 = new GradeItem();
+            quiz1.type = "quiz";
+            quiz1.level = 1;
+            quiz1.title = quiz1.type;
+            quiz1.weight = "0";
+
+            for (int i = 0; i < 3; i++) {
+                GradeItem tmp = new GradeItem();
+                tmp.type = "quiz";
+                tmp.level = 2;
+                tmp.title = tmp.type + i;
+                tmp.weight = "0";
+                quizList.Add(tmp);
+            }
+            gradeDict.Add(quiz1, quizList);
         }
 
         private string GetFileName()
@@ -263,38 +302,60 @@ namespace GradeClassifier
         {
 
         }
-
+        
         private void ExpandClick(object sender, RoutedEventArgs e) {
-            Console.WriteLine("PublishClick");
+            Button bn = sender as Button;
+            int index = gradingColmums.Items.IndexOf(bn.DataContext);
+            GradeItem keyItem = (GradeItem)gradingColmums.Items.GetItemAt(index);
+            
+            List<GradeItem> list = gradeDict[keyItem];
+            foreach (GradeItem gi in list) {
+                if (gi.isVisible == "Visible") {
+                    gi.isVisible = "Collapsed";
+                }
+                else {
+                    gi.isVisible = "Visible";
+                }
+            }
+            gradingColmums.Items.Refresh();
         }
+
 
         private void PublishClick(object sender, RoutedEventArgs e) {
             // check grading scales are valid
             if (!checkGradingScale()) {
                 return;
             }
-            
             gradingColmums.Items.Clear();
-            for (int i = 0; i < 20; i++) {
-                if (i % 4 == 0)
-                {
-                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Visible" });
+
+            //Dictionary<GradeItem, List<GradeItem>> gradeDict;
+
+            foreach (KeyValuePair<GradeItem, List<GradeItem>> entry in gradeDict) {
+                GradeItem keyItem = entry.Key;
+                List<GradeItem> listItems = entry.Value;
+
+                keyItem.isVisible = "Visible";
+                keyItem.bnVisible = "Visible";
+                gradingColmums.Items.Add(keyItem);
+
+                foreach (GradeItem gi in listItems) {
+                    gi.isVisible = "Collapsed";
+                    gi.bnVisible = "Hidden";
+                    gradingColmums.Items.Add(gi);
                 }
-                else {
-                    gradingColmums.Items.Add(new GradeItem() { title = "homework " + i, weight = "10", isVisible = "Collapsed" });
-                }
-                
+
             }
-            Console.WriteLine("PublishClick");
         }
 
     }
 
-    public class GradeItem
-    {
+    public class GradeItem {
+        public string type { get; set; }
+        public int level { get; set; }
+        public string bnVisible { get; set; }
+
         public string title { get; set; }
         public string weight { get; set; }
-
         public string isVisible { get; set; }
     }
 }
