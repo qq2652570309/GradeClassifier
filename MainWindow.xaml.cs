@@ -135,7 +135,7 @@ namespace GradeClassifier {
 
             if (others.Count > 0) {
                 string newName = fileName + "_others.csv";
-                File.AppendAllText(newName, "SU,GRAD,Student¡¯s program code,Student¡¯s SUID number,Final Exam Grade\n");
+                File.AppendAllText(newName, "SU,GRAD,Student's program code,Student's SUID number,Final Exam Grade\n");
                 foreach (string[] strs in others) {
                     string insert = string.Join(",", new string[] { "SU", grade, spc, strs[0], strs[1] }) + "\n";
                     File.AppendAllText(newName, insert);
