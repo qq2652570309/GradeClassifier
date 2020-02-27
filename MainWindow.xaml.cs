@@ -73,7 +73,7 @@ namespace GradeClassifier {
             string fileName = "";
             try {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "CSV (*.csv)|*.csv|XLSX (*.xlsx)|*.xlsx|XLS (*.xls)|*.xls";
+                openFileDialog.Filter = "file (*.csv, *.xls) |*.csv;*.xls";
                 if (openFileDialog.ShowDialog() == true) {
                     fileName = openFileDialog.FileName;
                     Console.WriteLine(fileName);
@@ -91,35 +91,29 @@ namespace GradeClassifier {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
                 return;
             parser.ReadData(fileName);
+            int statusCode = parser.getCode();
+            switch (statusCode) {
+                case 401:
+                    MessageBox.Show("No columns for Final Exam Grade");
+                    return;
+                case 405:
+                    MessageBox.Show("The process cannot access the file '" + fileName + "', Maybe it is being used by another process.");
+                    return;
+                default:
+                    CurrPath.Text = fileName;
+                    break;
+            }
             //parser.print();
-            CurrPath.Text = fileName;
         }
 
         private void renameFile_Click(object sender, RoutedEventArgs e) {
 
         }
 
-        //TextBox TcTb; // TermCodeTBox
-        //ComboBox ScTb; // SubjectCodeTBox
-        //TextBox CnTb; // CatalogNumberTBox
-        //TextBox StpTb; // StPCodeTBox
-        //ComboBox gcb; // GradeCBox
 
         private void GenerateCSV(String oldFile, string fileName) {
-            Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
-            List<string> aList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("A", aList);
-            List<string> aMinusList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("A-", aMinusList);
-            List<string> bPlusList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("B+", bPlusList);
-            List<string> bList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("B", bList);
-            List<string> bMinusList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("B-", bMinusList);
-            List<string> cList = new List<string>() { "946630449", "338835543", "903951927" };
-            dict.Add("C", cList);
-            List<string[]> others = new List<string[]>();
+            Dictionary<string, List<string>> dict = parser.getClassifier();
+            List<string[]> others = parser.getOthers();
 
             int pos = oldFile.LastIndexOf("\\");
             //String newFile = oldFile.Substring(0, pos + 1) + "out.csv";

@@ -86,6 +86,7 @@ namespace GradeClassifier
                 // Let the user know what went wrong.
                 Console.WriteLine("File could not be read:");
                 Console.WriteLine(e.Message);
+                code = 405;
             }
         }
 
