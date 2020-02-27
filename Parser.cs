@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using OfficeOpenXml;
 
 namespace GradeClassifier
 {
@@ -17,12 +16,15 @@ namespace GradeClassifier
         String fileName;
         Dictionary<String, List<String>> classifier;
         List<String[]> others;
+        int code;   // 200 everything is OK
+                    // 401 no "Final Exame Grade" column 
 
         public Parser() {
             Compare = CultureInfo.InvariantCulture.CompareInfo;
             idIndex = 3;
             classifier = new Dictionary<string, List<string>>();
             others = new List<string[]>();
+            code = 200;
         }
 
         public Parser(string fileName) {
@@ -30,13 +32,29 @@ namespace GradeClassifier
             Compare = CultureInfo.InvariantCulture.CompareInfo;
             classifier = new Dictionary<string, List<string>>();
             others = new List<string[]>();
+            code = 200;
         }
+
+        public Dictionary<String, List<String>> getClassifier() {
+            return classifier;
+        }
+
+        public List<String[]> getOthers() {
+            return others;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
 
         // Initialize all global variables
         public void initialization() {
             classifier.Clear();
+            others.Clear();
             idIndex = 3;
             fileName = "";
+            code = 200;
         }
 
         // Read given file (default is CSV file) and parse it.
@@ -54,9 +72,12 @@ namespace GradeClassifier
                             cells = splitLine(line, delimiter);
                             parseHeader(cells);
                         }
-                        else {
+                        else if (code == 200) {
                             cells = splitLine(line, delimiter);
                             parseStudent(cells);
+                        }
+                        else {
+                            break;
                         }
                     }
                 }
@@ -66,8 +87,6 @@ namespace GradeClassifier
                 Console.WriteLine("File could not be read:");
                 Console.WriteLine(e.Message);
             }
-
-            
         }
 
         // find first char which potentially works as delimiter.
@@ -90,13 +109,15 @@ namespace GradeClassifier
         private void parseHeader(string[] headers) {
             for (int i = 0; i < headers.Length; i++) {
                 string header = headers[i];
-                int pos;
-                if ((pos = Compare.IndexOf(header, "Student ID", CompareOptions.IgnoreCase)) != -1) {
-                    idIndex = pos;
+                if (Compare.IndexOf(header, "Student ID", CompareOptions.IgnoreCase) != -1) {
+                    idIndex = i;
                 }
             }
-        }
 
+            if (Compare.IndexOf(headers[headers.Length - 1], "Final Exam Grade", CompareOptions.IgnoreCase) == -1) {
+                code = 401;
+            }
+        }
 
         // parse rows and get student id and grade
         private void parseStudent(string[] cells) {
@@ -129,11 +150,6 @@ namespace GradeClassifier
         // remove quotes (") from cell
         private String trimQuotes(String cell) {
             return cell.Replace("\"", "");
-        }
-
-        // get classifier
-        public Dictionary<String, List<String>> getClassifier() {
-            return classifier;
         }
 
         public void print() {

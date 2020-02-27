@@ -76,11 +76,6 @@ namespace GradeClassifier {
                 openFileDialog.Filter = "CSV (*.csv)|*.csv|XLSX (*.xlsx)|*.xlsx|XLS (*.xls)|*.xls";
                 if (openFileDialog.ShowDialog() == true) {
                     fileName = openFileDialog.FileName;
-                    //txtEditor.Text = "successfully load " + fileName;
-                    //DataTable data = new DataTable(fileName);
-                    //data = NewDataTable(fileName, ",", true);
-                    //grdDataImp.DataSource = data;
-
                     Console.WriteLine(fileName);
                 }
             }
@@ -90,67 +85,13 @@ namespace GradeClassifier {
             return fileName;
         }
 
-        // get basic column indices of basic student informantion
-        // including: last name, first name, username, id
-        private void targetColumns(string line) {
-            string[] cols;
-            if (line.IndexOf(',') != -1) {
-                cols = line.Split(',');
-            }
-            else {
-                cols = line.Split('\t');
-            }
-            for (int i = 0; i < cols.Length; i++) {
-                string col = cols[i];
-                foreach (string target in targets) {
-                    if (col != null && col.IndexOf(target) != -1) {
-                        columns.Add(i);
-                    }
-                }
-            }
-        }
-
-        private void ParseData(String line) {
-            string[] cols;
-            if (line.IndexOf(',') != -1) {
-                cols = line.Split(',');
-            }
-            else {
-                cols = line.Split('\t');
-            }
-        }
-
-        private void ReadData(string fileName) {
-            try {
-                // Create an instance of StreamReader to read from a file.
-                // The using statement also closes the StreamReader.
-                using (StreamReader sr = new StreamReader(fileName)) {
-                    string line;
-                    // Read and display lines from the file until the end of 
-                    // the file is reached.
-                    for (int i = 0; (line = sr.ReadLine()) != null; i++) {
-                        if (i == 0) {
-                            targetColumns(line);
-                        }
-                        else {
-                            ParseData(line);
-                        }
-                    }
-                }
-            }
-            catch (Exception e) {
-                // Let the user know what went wrong.
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-            }
-        }
-
         // Browse button event
         private void btnOpenFile_Click(object sender, RoutedEventArgs e) {
             string fileName = GetFileName();
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
+                return;
             parser.ReadData(fileName);
-            parser.print();
-
+            //parser.print();
             CurrPath.Text = fileName;
         }
 
