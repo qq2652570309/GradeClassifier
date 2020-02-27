@@ -125,7 +125,7 @@ namespace GradeClassifier {
                 string newName = fileName + "_" + entry.Key + ".csv";
                 List<string> ids = entry.Value;
 
-                File.AppendAllText(newName, "SU,GRAD,Student¡¯s program code,Student¡¯s SUID number,Final Exam Grade\n");
+                File.AppendAllText(newName, "SU,GRAD,Student's program code,Student's SUID number,Final Exam Grade\n");
                 foreach (string id in ids) {
                     string insert = string.Join(",", new string[] { "SU", grade, spc, id, entry.Key}) + "\n";
                     File.AppendAllText(newName, insert);
