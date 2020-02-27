@@ -22,61 +22,52 @@ namespace GradeClassifier {
     /// </summary>
     public partial class MainWindow : Window {
         List<int> columns;
-        List<Student> studentInfo;
         List<string> targets;
         Parser parser;
 
-        Dictionary<Property, List<Property>> gradeDict;
-        Dictionary<string, Property> existHead;
+        TextBox TcTb; // TermCodeTBox
+        ComboBox ScTb; // SubjectCodeTBox
+        TextBox CnTb; // CatalogNumberTBox
+        TextBox StpTb; // StPCodeTBox
+        ComboBox gcb; // GradeCBox
 
         public MainWindow() {
             InitializeComponent();
 
             columns = new List<int>();
-            studentInfo = new List<Student>();
             targets = new List<string>() {
                 "Last Name", "First Name", "Username", "Student ID"
             };
 
             parser = new Parser();
 
-            gradeDict = new Dictionary<Property, List<Property>>();
-            existHead = new Dictionary<string, Property>();
-
-            //List<GradeItem> hwList = new List<GradeItem>();
-            //GradeItem hw1 = new GradeItem();
-            //hw1.type = "homework";
-            //hw1.level = 1;
-            //hw1.title = hw1.type;
-            //hw1.weight = "0";
-
-            //for (int i = 0; i < 3; i++) {
-            //    GradeItem tmp = new GradeItem();
-            //    tmp.type = "homework";
-            //    tmp.level = 2;
-            //    tmp.title = tmp.type + i;
-            //    tmp.weight = "0";
-            //    hwList.Add(tmp);
-            //}
-            //gradeDict.Add(hw1, hwList);
-
-            //List<GradeItem> quizList = new List<GradeItem>();
-            //GradeItem quiz1 = new GradeItem();
-            //quiz1.type = "quiz";
-            //quiz1.level = 1;
-            //quiz1.title = quiz1.type;
-            //quiz1.weight = "0";
-
-            //for (int i = 0; i < 3; i++) {
-            //    GradeItem tmp = new GradeItem();
-            //    tmp.type = "quiz";
-            //    tmp.level = 2;
-            //    tmp.title = tmp.type + i;
-            //    tmp.weight = "0";
-            //    quizList.Add(tmp);
-            //}
-            //gradeDict.Add(quiz1, quizList);
+            initTextBoxes();
         }
+
+        // initialize several component variables
+        private void initTextBoxes() {
+            TcTb = TermCodeTBox;
+            DateTime thisDay = DateTime.Today;
+            string month = thisDay.Month.ToString();
+            if (month.Length == 1)
+                month = "0" + month;
+            string day = thisDay.Day.ToString();
+            if (day.Length == 1)
+                day = "0" + day;
+            TcTb.Text = month+day;
+            
+            ScTb = SubjectCodeCBox;
+            CnTb = CatalogNumberTBox;
+            StpTb = StPCodeTBox;
+            gcb = GradeCBox;
+        }
+
+        // clear content of focused textbox
+        private void SetNullGotFocus(object sender, RoutedEventArgs e) {
+            TextBox tb = sender as TextBox;
+            tb.Text = "";
+        }
+
 
         private string GetFileName() {
             string fileName = "";
@@ -127,8 +118,6 @@ namespace GradeClassifier {
             else {
                 cols = line.Split('\t');
             }
-            Student st = new Student(cols[0], cols[1], cols[2], int.Parse(cols[3]));
-            studentInfo.Add(st);
         }
 
         private void ReadData(string fileName) {
@@ -148,8 +137,6 @@ namespace GradeClassifier {
                         }
                     }
                 }
-                // use default comparator implemented in Student class
-                studentInfo.Sort();
             }
             catch (Exception e) {
                 // Let the user know what went wrong.
@@ -158,194 +145,101 @@ namespace GradeClassifier {
             }
         }
 
-        private void GenerateCSV(String oldFile) {
-            int pos = oldFile.LastIndexOf("\\");
-            String newFile = oldFile.Substring(0, pos + 1) + "out.csv";
-            File.AppendAllText(newFile, "Last Name,First Name,UserName,Student ID\n");
-            foreach (Student st in studentInfo) {
-                File.AppendAllText(newFile, st.CsvFormat());
-            }
-        }
-
-        /*
-        check whether input grading value is valid. If input is null or can not be
-        converted to integer, it is invalid 
-        */
-        private bool isValidGrade(string str, ref int num, String grade) {
-            bool isNullEmpty = string.IsNullOrEmpty(str);
-            if (isNullEmpty) {
-                MessageBox.Show("Grading " + grade + " can't be blank");
-                return false;
-            }
-            bool isNum = Int32.TryParse(str, out num);
-            if (!isNum) {
-                MessageBox.Show("Grading " + grade + " must be Numeric");
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        check whether input scales are valid. If there exit an overlapping, scale is invalid 
-        */
-        private bool isValidScale(int ceiling, int floor, int preFloor, string grade) {
-            if (ceiling <= 0 || floor <= 0 || preFloor <= 0) {
-                MessageBox.Show("Scale must be positive and non-zero");
-                return false;
-            }
-            if (preFloor <= ceiling || ceiling <= floor) {
-                MessageBox.Show("There is overlapping with scale " + grade);
-                return false;
-            }
-            return true;
-        }
-
-        // check grade scale is valid without overlapping. verfiy continuity
-        private bool checkGradingScale() {
-            string AMinValue = Amin.Text;
-            int AMinNum = 0;
-
-            string BMaxValue = Bmax.Text;
-            string BMinValue = Bmin.Text;
-            int BMaxNum = 0;
-            int BMinNum = 0;
-
-            string CMaxValue = Cmax.Text;
-            string CMinValue = Cmin.Text;
-            int CMaxNum = 0;
-            int CMinNum = 0;
-
-            string DMaxValue = Dmax.Text;
-            string DMinValue = Dmin.Text;
-            int DMaxNum = 0;
-            int DMinNum = 0;
-            // verify Grade Scale A
-            if (!isValidGrade(AMinValue, ref AMinNum, "A")) {
-                return false;
-            }
-            if (AMinNum >= 100) {
-                MessageBox.Show("Grading A must less than 100");
-                return false;
-            }
-            // verify Grade Scale B
-            if (!isValidGrade(BMaxValue, ref BMaxNum, "B")
-                || !isValidGrade(BMinValue, ref BMinNum, "B")) {
-                return false;
-            }
-            if (!isValidScale(BMaxNum, BMinNum, AMinNum, "B")) {
-                return false;
-            }
-            // verify Grade Scale C
-            if (!isValidGrade(CMaxValue, ref CMaxNum, "C")
-                || !isValidGrade(CMinValue, ref CMinNum, "C")) {
-                return false;
-            }
-            if (!isValidScale(CMaxNum, CMinNum, BMinNum, "C")) {
-                return false;
-            }
-            // verify Grade Scale D
-            if (!isValidGrade(DMaxValue, ref DMaxNum, "D")
-                || !isValidGrade(DMinValue, ref DMinNum, "D")) {
-                return false;
-            }
-            if (!isValidScale(DMaxNum, DMinNum, CMinNum, "D")) {
-                return false;
-            }
-            // verify continuity
-            if (AMinNum != BMaxNum + 1 || BMinNum != CMaxNum + 1 || CMinNum != DMaxNum + 1) {
-                MessageBox.Show("There are gaps among grade scales");
-                return false;
-            }
-            return true;
-        }
-
         // Browse button event
         private void btnOpenFile_Click(object sender, RoutedEventArgs e) {
             string fileName = GetFileName();
             parser.ReadData(fileName);
             parser.print();
 
-            gradingColmums.Items.Clear();
-            gradeDict.Clear();
-            existHead.Clear();
-
-            //Dictionary<Property, List<Property>> gradeDict;
-
-            foreach (KeyValuePair<int, Property> entry in parser.propertyMap) {
-                Property p = entry.Value;
-                if (existHead.ContainsKey(p.colType)) {
-                    gradeDict[existHead[p.colType]].Add(p);
-                }
-                else {
-                    Property head = new Property();
-                    head.colType = p.colType;
-                    head.colName = head.colType;
-                    //head.setType(p.getColType());
-                    List<Property> list = new List<Property>();
-                    list.Add(p);
-                    gradeDict.Add(head, list);
-                    existHead.Add(head.colType, head);
-                }
-            }
-
-            foreach (KeyValuePair<Property, List<Property>> entry in gradeDict) {
-                Property keyItem = entry.Key;
-                List<Property> listItems = entry.Value;
-
-                keyItem.isVisible = "Visible";
-                keyItem.bnVisible = "Visible";
-                gradingColmums.Items.Add(keyItem);
-                Console.WriteLine(keyItem.colType);
-
-                foreach (Property gi in listItems) {
-                    gi.isVisible = "Collapsed";
-                    gi.bnVisible = "Hidden";
-                    gradingColmums.Items.Add(gi);
-                    Console.WriteLine(gi.colType);
-                }
-            }
-            gradingColmums.Items.Refresh();
+            CurrPath.Text = fileName;
         }
 
         private void renameFile_Click(object sender, RoutedEventArgs e) {
 
         }
 
-        private void ExpandClick(object sender, RoutedEventArgs e) {
-            Button bn = sender as Button;
-            int index = gradingColmums.Items.IndexOf(bn.DataContext);
-            Property keyItem = (Property)gradingColmums.Items.GetItemAt(index);
+        //TextBox TcTb; // TermCodeTBox
+        //ComboBox ScTb; // SubjectCodeTBox
+        //TextBox CnTb; // CatalogNumberTBox
+        //TextBox StpTb; // StPCodeTBox
+        //ComboBox gcb; // GradeCBox
 
-            List<Property> list = gradeDict[keyItem];
-            foreach (Property gi in list) {
-                if (gi.isVisible == "Visible") {
-                    gi.isVisible = "Collapsed";
+        private void GenerateCSV(String oldFile, string fileName) {
+            Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+            List<string> aList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("A", aList);
+            List<string> aMinusList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("A-", aMinusList);
+            List<string> bPlusList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("B+", bPlusList);
+            List<string> bList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("B", bList);
+            List<string> bMinusList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("B-", bMinusList);
+            List<string> cList = new List<string>() { "946630449", "338835543", "903951927" };
+            dict.Add("C", cList);
+            List<string[]> others = new List<string[]>();
+
+            int pos = oldFile.LastIndexOf("\\");
+            //String newFile = oldFile.Substring(0, pos + 1) + "out.csv";
+            fileName = oldFile.Substring(0, pos + 1) + fileName;
+            string grade = gcb.Text;
+            string spc = StpTb.Text;
+
+            foreach (KeyValuePair<string, List<string>> entry in dict) {
+                string newName = fileName + "_" + entry.Key + ".csv";
+                List<string> ids = entry.Value;
+
+                File.AppendAllText(newName, "SU,GRAD,Student¡¯s program code,Student¡¯s SUID number,Final Exam Grade\n");
+                foreach (string id in ids) {
+                    string insert = string.Join(",", new string[] { "SU", grade, spc, id, entry.Key}) + "\n";
+                    File.AppendAllText(newName, insert);
                 }
-                else {
-                    gi.isVisible = "Visible";
-                }
+                Console.WriteLine("grade {0} finish!", entry.Key);
             }
-            gradingColmums.Items.Refresh();
+
+            if (others.Count > 0) {
+                string newName = fileName + "_others.csv";
+                File.AppendAllText(newName, "SU,GRAD,Student¡¯s program code,Student¡¯s SUID number,Final Exam Grade\n");
+                foreach (string[] strs in others) {
+                    string insert = string.Join(",", new string[] { "SU", grade, spc, strs[0], strs[1] }) + "\n";
+                    File.AppendAllText(newName, insert);
+                }
+                MessageBox.Show("There are problems with the data of " + others.Count + " students. Students' data is stored in "+ newName);
+                Console.WriteLine("others finish!");
+            }
+
         }
 
-
+        // verify 3 textbox, guarantee none is empty. Gnerate output CSV
         private void PublishClick(object sender, RoutedEventArgs e) {
-            // check grading scales are valid
-            if (!checkGradingScale()) {
+            if (string.IsNullOrWhiteSpace(CurrPath.Text)) {
+                MessageBox.Show("Please choose a file");
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(TcTb.Text)) {
+                MessageBox.Show("Term Code can not be blank");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(ScTb.Text)) {
+                MessageBox.Show("Subject Code can not be blank");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(CnTb.Text)) {
+                MessageBox.Show("Catalog Number can not be blank");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(StpTb.Text)) {
+                MessageBox.Show("Student¡¯s program code can not be blank");
+                return;
+            }
+
+            string fileName = TcTb.Text + "_" + ScTb.Text + "_" + CnTb.Text;
+            Console.WriteLine(fileName);
+
+            GenerateCSV(CurrPath.Text, fileName);
         }
 
-    }
-
-    public class GradeItem {
-        public string type { get; set; }
-        public int level { get; set; }
-        public string bnVisible { get; set; }
-
-        public string title { get; set; }
-        public string weight { get; set; }
-        public string isVisible { get; set; }
     }
 }

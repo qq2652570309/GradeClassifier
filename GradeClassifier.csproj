@@ -59,8 +59,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Parser.cs" />
-    <Compile Include="Property.cs" />
-    <Compile Include="Student.cs" />
     <Compile Include="Test.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

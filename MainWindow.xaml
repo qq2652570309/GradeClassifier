@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeClassifier"
         mc:Ignorable="d"
-        Title="Grade Classifier" Height="600" Width="660">
-   
+        Title="Grade Classifier" Height="175" Width="660">
+
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 10 0 5">
             <Label FontFamily="tahoma" FontWeight="Bold" FontSize="16" >Path:</Label>
@@ -14,14 +14,18 @@
             <Border BorderThickness="1" BorderBrush="Black" Margin="2">
                 <TextBlock x:Name="CurrPath" x:FieldModifier="public" 
                            VerticalAlignment="Center" FontWeight="Medium" 
-                           FontSize="12" Width="470"></TextBlock>
+                           FontSize="12" Width="480"></TextBlock>
             </Border>
             <Button Name="btnOpenFile" Click = "btnOpenFile_Click" Content="Browse" 
-                    Margin="20 5 0 5" FontFamily="tahoma" FontWeight="Bold" FontSize="16" 
+                    Margin="20 2 0 5" FontFamily="tahoma" FontWeight="Bold" FontSize="16" 
                     />
         </StackPanel>
-        
+
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="617*"/>
+                <ColumnDefinition Width="35*"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5"></RowDefinition>
                 <!--row0-->
@@ -29,65 +33,41 @@
                 <!--row1-->
                 <RowDefinition Height="5"></RowDefinition>
                 <!--row2-->
-                <RowDefinition Height="*"></RowDefinition>
-                <!--row3-->
-                <RowDefinition Height="5"></RowDefinition>
-                <!--row4-->
                 <RowDefinition Height="40"></RowDefinition>
-                <!--row5-->
+                <!--row3-->
             </Grid.RowDefinitions>
-            <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" Background="#999" />
-            <StackPanel Grid.Row="1" Orientation="Horizontal" DockPanel.Dock="Top">
-                <Label Padding="40 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">A:</Label>
-                <Label Padding="3 8 0 0" FontFamily="tahoma" FontSize="12" Margin="3 3 0 3" >100</Label>
-                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
-                <TextBox Name="Amin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="90"  />
+            <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" Background="#999" Grid.ColumnSpan="2" />
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.ColumnSpan="2">
+                <Label Padding="20 10 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">Term Code:</Label>
+                <TextBox Name="TermCodeTBox" Width = "80" Margin="3 3 0 3" Padding="5" TextAlignment="Center" FontSize="14" Text=""
+                         GotFocus="SetNullGotFocus"/>
                 
-                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">B:</Label>
-                <TextBox Name="Bmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="89"  />
-                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
-                <TextBox Name="Bmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="80"  />
+                <Label Padding="25 10 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">Subject Code:</Label>
+                <ComboBox Name="SubjectCodeCBox" Width="70" Margin="3 3 0 3" Padding="5" FontSize="14" IsEditable="True">
+                    <ComboBoxItem Width="30" Padding="0 0 3 0">CSE</ComboBoxItem>
+                    <ComboBoxItem Width="30" Padding="0 0 3 0">CIS</ComboBoxItem>
+                    <ComboBoxItem Width="30" Padding="0 0 3 0">ELE</ComboBoxItem>
+                </ComboBox>
+                <Label Padding="25 10 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">Catalog Number:</Label>
+                <TextBox Name="CatalogNumberTBox" Width = "60" Margin="3 3 0 3" Padding="5" TextAlignment="Center" FontSize="14" Text=""  />
 
-                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">C:</Label>
-                <TextBox Name="Cmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="79"  />
-                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
-                <TextBox Name="Cmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="70"  />
-                
-                <Label Padding="30 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">D:</Label>
-                <TextBox Name="Dmax" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="69"  />
-                <Label Padding="3 8 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">~</Label>
-                <TextBox Name="Dmin" Width = "40" Margin="3 3 0 3" Padding="5" FontSize="12" Text="60" />
             </StackPanel>
-            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Background="#999" />
-            <ListBox Grid.Row="3" x:Name="gradingColmums" x:FieldModifier="public" Margin="10 5" FontWeight="Medium" FontSize="12" 
-                     HorizontalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="0,5,0,5" Visibility="{Binding isVisible}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <!--row0-->
-                                <ColumnDefinition Width="40" />
-                                <!--row1-->
-                                <ColumnDefinition Width="20" />
-                                <!--row2-->
-                                <ColumnDefinition Width="20" />
-                                <!--row3-->
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding colName}"  />
-                            <Border Grid.Column="1" BorderThickness="1" BorderBrush="Black" Margin="2">
-                                <TextBox VerticalAlignment="Center" TextAlignment="Right" Text="{Binding weight}" />
-                            </Border>
-                            <TextBlock Grid.Column="2" Padding="0,2" Text="%" />
-                            <Button Grid.Column="3" Click = "ExpandClick" Background="Transparent" Visibility="{Binding bnVisible}">
-                                <Image Source="images/drop-down-arrow.png" Height="20"></Image>
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <GridSplitter Grid.Row="4" HorizontalAlignment="Stretch" Background="#999" />
-            <Button Name="btnPublish" Click = "PublishClick" Grid.Row="5" Content="Publish" Margin="10 5 10 5" />
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Background="#999" Grid.ColumnSpan="2" />
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2">
+                <Label Padding="20 10 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">Student’s program code:</Label>
+                <TextBox Name="StPCodeTBox" Width = "100" Margin="3 3 0 3" Padding="5" TextAlignment="Center" FontSize="14" Text=""
+                         GotFocus="SetNullGotFocus"/>
+
+                <Label Padding="40 10 0 0" FontFamily="tahoma" FontWeight="Bold" FontSize="16">Grade:</Label>
+                <ComboBox Name="GradeCBox" Width="70" Margin="3 3 0 3" Padding="5 8" FontSize="14" IsEditable="False">
+                    <ComboBoxItem Width="50" Padding="0 2 3 0" IsSelected="True">UGRD</ComboBoxItem>
+                    <ComboBoxItem Width="50" Padding="0 0 3 0">GRAD</ComboBoxItem>
+                </ComboBox>
+
+                <Button Name="btnPublish"  Margin="80 5 10 5" Content="Publish" FontWeight="Bold" FontSize="16"
+                        Click = "PublishClick"/>
+            </StackPanel>
         </Grid>
     </DockPanel>
 </Window>
