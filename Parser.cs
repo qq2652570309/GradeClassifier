@@ -12,17 +12,14 @@ namespace GradeClassifier
     class Parser
     {
         String fileName;
-        public Dictionary<int, Property> propertyMap; // key is column index, value is property object
         CompareInfo Compare; // ignore upper or lower case
 
         public Parser() {
-            propertyMap = new Dictionary<int, Property>();
             Compare = CultureInfo.InvariantCulture.CompareInfo;
         }
 
         public Parser(string fileName) {
             this.fileName = fileName;
-            propertyMap = new Dictionary<int, Property>();
             Compare = CultureInfo.InvariantCulture.CompareInfo;
         }
 
@@ -90,18 +87,7 @@ namespace GradeClassifier
             for (int i = 4; i < headers.Length; i++) {
                 string header = headers[i];
                 string type = headerType(header);
-                if (!type.Equals("None")) {
-                    Property p = new Property(i);
-                    string ptsType = pointsType(header);
-                    int ptsMax = pointsMax(header);
-
-                    p.setColType(type);
-                    p.setName(getName(header));
-                    p.setPtsType(ptsType);
-                    p.setPtsMax(ptsMax);
-
-                    propertyMap.Add(i, p);
-                }
+                
             }
         }
 
@@ -200,9 +186,7 @@ namespace GradeClassifier
 
 
         public void print() {
-            foreach (KeyValuePair<int, Property> item in propertyMap) {
-                Console.WriteLine(item.Value.toString());
-            }
+
         }
     }
 }
